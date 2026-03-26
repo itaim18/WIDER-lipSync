@@ -1,0 +1,50 @@
+{
+  "original_reference": {
+    "original_path": "/home/itaim/wider-itai/LatentSync/input.mp4",
+    "model": "original",
+    "variant": "reference",
+    "description": "Original grandma-holding-cookies video (ground truth)",
+    "fps": 24,
+    "resolution": "720x1280"
+  },
+  "musetalk_raw": {
+    "original_path": "/home/itaim/wider-itai/musetalk_output.mp4",
+    "model": "musetalk",
+    "variant": "raw",
+    "description": "MuseTalk v1.5 baseline output, no post-processing",
+    "fps": 24,
+    "resolution": "720x1280"
+  },
+  "musetalk_occfix": {
+    "original_path": "/home/itaim/wider-itai/musetalk_fixed.mp4",
+    "model": "musetalk",
+    "variant": "occfix",
+    "description": "MuseTalk v1.5 + BiSeNet occlusion fix for plate/cookies",
+    "fps": 24,
+    "resolution": "720x1280"
+  },
+  "latentsync_fast": {
+    "original_path": "/home/itaim/wider-itai/output.mp4",
+    "model": "latentsync",
+    "variant": "fast",
+    "description": "LatentSync v1.6, 20 inference steps with DeepCache",
+    "fps": 25,
+    "resolution": "720x1280"
+  },
+  "latentsync_smooth": {
+    "original_path": "/home/itaim/wider-itai/latentsync_smooth.mp4",
+    "model": "latentsync",
+    "variant": "smooth",
+    "description": "LatentSync v1.6, 40 inference steps, no DeepCache",
+    "fps": 25,
+    "resolution": "720x1280"
+  },
+  "latentsync_occfix": {
+    "original_path": "/home/itaim/wider-itai/latentsync_fixed.mp4",
+    "model": "latentsync",
+    "variant": "occfix",
+    "description": "LatentSync v1.6 (40 steps) + BiSeNet occlusion fix",
+    "fps": 25,
+    "resolution": "720x1280"
+  }
+}

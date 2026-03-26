@@ -1,0 +1,73 @@
+# IDE and editor
+.idea/
+.vscode/
+.DS_Store
+*.swp
+*.swo
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+dist/
+build/
+.pytest_cache/
+.mypy_cache/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# External repos (clone separately, too large to embed)
+MuseTalk/
+LatentSync/
+
+# Model weights and checkpoints
+*.pth
+*.pt
+*.onnx
+*.safetensors
+*.ckpt
+
+# Media files
+*.mp4
+*.avi
+*.mov
+*.wav
+*.mp3
+*.flac
+
+# Images
+debug_frames/
+*.png
+*.jpg
+*.jpeg
+*.bmp
+
+# Temp and cache
+temp_occlusion/
+.cache/
+.gradio/
+wandb/
+
+# Eval workspace generated data (keep scripts + manifest + tex)
+eval_workspace/videos/
+eval_workspace/results/evaluation_results.*
+eval_workspace/results/syncnet/
+eval_workspace/figures/*.pdf
+
+# LaTeX build artifacts
+*.aux
+*.log
+*.out
+*.toc
+*.bbl
+*.blg
+
+# Data files
+*.pkl
+*.pickle
+
+# Local config
+.claude/
+.env
