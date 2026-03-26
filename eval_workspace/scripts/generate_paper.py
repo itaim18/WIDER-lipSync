@@ -343,15 +343,15 @@ Face SSIM$\uparrow$ & Mouth LPIPS$\downarrow$ & Flow Mean$\downarrow$ \\
 
 \section{{Conclusions}}
 
-\\noindent\\textbf{{Winner: latentsync\\_smooth.}}
+\noindent\textbf{{Winner: latentsync\_smooth.}}
 After testing every combination, the clear winner is LatentSync v1.6 run
 with 40 denoising steps and DeepCache turned off. It keeps the grandma
 looking like herself (identity score 0.96 out of 1.0), produces the most
 natural-looking mouth (lowest perceptual distortion at 0.106), and---crucially---the
 cookie plate stays almost entirely visible without any post-processing fix.
 
-\\vspace{{0.5em}}
-\\noindent\\textbf{{The occlusion fix made things worse.}}
+\vspace{{0.5em}}
+\noindent\textbf{{The occlusion fix made things worse.}}
 We built a per-frame compositing pipeline that detects non-face pixels
 (the plate, cookies, hands) and pastes them back on top of the lip-synced
 face. On paper it works: each individual frame looks correct. But in motion,
@@ -360,21 +360,21 @@ flickering and warping at the edges---worse than the original minor
 occlusion. A proper fix would need temporally-stable segmentation
 (like SAM2 video tracking) instead of independent per-frame parsing.
 
-\\vspace{{0.5em}}
-\\noindent\\textbf{{MuseTalk is smoother but less faithful.}}
+\vspace{{0.5em}}
+\noindent\textbf{{MuseTalk is smoother but less faithful.}}
 MuseTalk v1.5 produces noticeably smoother frame-to-frame transitions
-(about 30\\% less temporal jitter), but the person looks less like herself
+(about 30\% less temporal jitter), but the person looks less like herself
 (identity drops from 0.96 to 0.79) and the mouth region has more
 perceptual distortion. For applications where identity preservation
 matters, LatentSync is the better choice.
 
-\\vspace{{0.5em}}
-\\noindent\\textbf{{What we would try next:}}
-\\begin{{itemize}}
-  \\item SAM2 or optical-flow-guided masks for temporally-stable occlusion compositing
-  \\item Human perceptual study to validate these automated metrics
-  \\item Testing on more diverse videos (different faces, lighting, occlusion types)
-\\end{{itemize}}
+\vspace{{0.5em}}
+\noindent\textbf{{What we would try next:}}
+\begin{{itemize}}
+  \item SAM2 or optical-flow-guided masks for temporally-stable occlusion compositing
+  \item Human perceptual study to validate these automated metrics
+  \item Testing on more diverse videos (different faces, lighting, occlusion types)
+\end{{itemize}}
 
 \end{{document}}
 """

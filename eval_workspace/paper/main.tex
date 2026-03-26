@@ -150,11 +150,11 @@ Video ID & Model & Variant & FPS & Description \\
 Video & Sync Conf$\uparrow$ & AV Off$\downarrow$ & ID Cos$\uparrow$ & Temp MAD$\downarrow$ & Temp P95$\downarrow$ &
 Face SSIM$\uparrow$ & Mouth LPIPS$\downarrow$ & Flow Mean$\downarrow$ \\
 \midrule
-    latentsync\_fast & -0.05 & -12 & 0.960 & 6.7 & 13.9 & 0.813 & 0.107 & 1.32 \\
-    latentsync\_occfix & -0.01 & 4 & 0.946 & 6.9 & 14.5 & 0.700 & 0.155 & 1.37 \\
-    latentsync\_smooth & -0.05 & -12 & 0.959 & 6.8 & 14.4 & 0.816 & 0.106 & 1.33 \\
-    musetalk\_occfix & -0.04 & -12 & 0.786 & 5.1 & 9.6 & 0.806 & 0.198 & 0.95 \\
-    musetalk\_raw & -0.05 & -12 & 0.789 & 4.9 & 9.0 & 0.814 & 0.206 & 0.88 \\
+    latentsync\_fast & -0.05 & -12 & 0.960 & 8.6 & 19.6 & 0.783 & 0.123 & 1.99 \\
+    latentsync\_occfix & -0.01 & 4 & 0.946 & 8.9 & 20.5 & 0.688 & 0.170 & 2.02 \\
+    latentsync\_smooth & -0.05 & -12 & 0.959 & 8.8 & 20.5 & 0.787 & 0.124 & 2.02 \\
+    musetalk\_occfix & -0.04 & -12 & 0.786 & 7.3 & 16.4 & 0.796 & 0.204 & 1.58 \\
+    musetalk\_raw & -0.05 & -12 & 0.789 & 7.2 & 16.1 & 0.800 & 0.211 & 1.51 \\
 \bottomrule
 \end{tabular}%
 }
@@ -164,7 +164,7 @@ Face SSIM$\uparrow$ & Mouth LPIPS$\downarrow$ & Flow Mean$\downarrow$ \\
 
 \paragraph{latentsync\_fast}
 This output uses latentsync (fast).
-Strengths: strong identity preservation (0.960); high mouth fidelity (LPIPS=0.107). Weaknesses: low sync confidence (-0.05); notable AV offset (-12 frames). 
+Strengths: strong identity preservation (0.960); high mouth fidelity (LPIPS=0.123). Weaknesses: low sync confidence (-0.05); notable AV offset (-12 frames). 
 
 \paragraph{latentsync\_occfix}
 This output uses latentsync (occfix).
@@ -172,7 +172,7 @@ Strengths: strong identity preservation (0.946). Weaknesses: low sync confidence
 
 \paragraph{latentsync\_smooth}
 This output uses latentsync (smooth).
-Strengths: strong identity preservation (0.959); high mouth fidelity (LPIPS=0.106). Weaknesses: low sync confidence (-0.05); notable AV offset (-12 frames). 
+Strengths: strong identity preservation (0.959); high mouth fidelity (LPIPS=0.124). Weaknesses: low sync confidence (-0.05); notable AV offset (-12 frames). 
 
 \paragraph{musetalk\_occfix}
 This output uses musetalk (occfix).
@@ -180,11 +180,11 @@ Weaknesses: low sync confidence (-0.04); notable AV offset (-12 frames).
 
 \paragraph{musetalk\_raw}
 This output uses musetalk (raw).
-Strengths: smooth temporal transitions (MAD=4.9). Weaknesses: low sync confidence (-0.05); notable AV offset (-12 frames). 
+Weaknesses: low sync confidence (-0.05); notable AV offset (-12 frames). 
 
 \section{Discussion}
 
-The highest sync confidence was achieved by latentsync\_occfix (-0.01). Best identity preservation was by latentsync\_fast (0.960). The smoothest temporal transitions were from musetalk\_raw (MAD=4.9). 
+The highest sync confidence was achieved by latentsync\_occfix (-0.01). Best identity preservation was by latentsync\_fast (0.960). The smoothest temporal transitions were from musetalk\_raw (MAD=7.2). 
 
 \paragraph{Occlusion Fix: Mathematically Correct but Perceptually Flawed.}
 A key finding is that the BiSeNet-based occlusion fix, while mathematically
@@ -221,15 +221,15 @@ full SyncNet evaluation.
 
 \section{Conclusions}
 
-\\noindent\\textbf{Winner: latentsync\\_smooth.}
+\noindent\textbf{Winner: latentsync\_smooth.}
 After testing every combination, the clear winner is LatentSync v1.6 run
 with 40 denoising steps and DeepCache turned off. It keeps the grandma
 looking like herself (identity score 0.96 out of 1.0), produces the most
 natural-looking mouth (lowest perceptual distortion at 0.106), and---crucially---the
 cookie plate stays almost entirely visible without any post-processing fix.
 
-\\vspace{0.5em}
-\\noindent\\textbf{The occlusion fix made things worse.}
+\vspace{0.5em}
+\noindent\textbf{The occlusion fix made things worse.}
 We built a per-frame compositing pipeline that detects non-face pixels
 (the plate, cookies, hands) and pastes them back on top of the lip-synced
 face. On paper it works: each individual frame looks correct. But in motion,
@@ -238,20 +238,20 @@ flickering and warping at the edges---worse than the original minor
 occlusion. A proper fix would need temporally-stable segmentation
 (like SAM2 video tracking) instead of independent per-frame parsing.
 
-\\vspace{0.5em}
-\\noindent\\textbf{MuseTalk is smoother but less faithful.}
+\vspace{0.5em}
+\noindent\textbf{MuseTalk is smoother but less faithful.}
 MuseTalk v1.5 produces noticeably smoother frame-to-frame transitions
-(about 30\\% less temporal jitter), but the person looks less like herself
+(about 30\% less temporal jitter), but the person looks less like herself
 (identity drops from 0.96 to 0.79) and the mouth region has more
 perceptual distortion. For applications where identity preservation
 matters, LatentSync is the better choice.
 
-\\vspace{0.5em}
-\\noindent\\textbf{What we would try next:}
-\\begin{itemize}
-  \\item SAM2 or optical-flow-guided masks for temporally-stable occlusion compositing
-  \\item Human perceptual study to validate these automated metrics
-  \\item Testing on more diverse videos (different faces, lighting, occlusion types)
-\\end{itemize}
+\vspace{0.5em}
+\noindent\textbf{What we would try next:}
+\begin{itemize}
+  \item SAM2 or optical-flow-guided masks for temporally-stable occlusion compositing
+  \item Human perceptual study to validate these automated metrics
+  \item Testing on more diverse videos (different faces, lighting, occlusion types)
+\end{itemize}
 
 \end{document}
