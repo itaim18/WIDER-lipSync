@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WIDER-lipSync: Lip-Sync Model Comparison</title>
+<style>
+  :root {
+    --bg: #0d1117;
+    --surface: #161b22;
+    --border: #30363d;
+    --text: #e6edf3;
+    --muted: #8b949e;
+    --accent: #58a6ff;
+    --green: #3fb950;
+    --red: #f85149;
+    --yellow: #d29922;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+  }
+  .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+
+  /* Hero */
+  .hero {
+    text-align: center;
+    padding: 80px 0 48px;
+    border-bottom: 1px solid var(--border);
+  }
+  .hero h1 { font-size: 2.4rem; font-weight: 700; margin-bottom: 12px; }
+  .hero h1 span { color: var(--accent); }
+  .hero p { color: var(--muted); font-size: 1.15rem; max-width: 700px; margin: 0 auto 24px; }
+  .badge {
+    display: inline-block;
+    background: #1f6feb22;
+    border: 1px solid #1f6feb55;
+    color: var(--accent);
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 600;
+  }
+
+  /* Winner banner */
+  .winner {
+    background: linear-gradient(135deg, #238636 0%, #1f6feb 100%);
+    border-radius: 12px;
+    padding: 32px 40px;
+    margin: 48px 0 40px;
+    text-align: center;
+  }
+  .winner h2 { font-size: 1.6rem; margin-bottom: 8px; }
+  .winner .tag { font-family: 'SF Mono', monospace; font-size: 1.3rem; background: rgba(0,0,0,.25); padding: 4px 14px; border-radius: 6px; }
+  .winner p { margin-top: 12px; opacity: 0.92; font-size: 1.05rem; }
+
+  /* Metrics table */
+  .metrics { margin: 48px 0; }
+  .metrics h2 { font-size: 1.5rem; margin-bottom: 20px; }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--surface);
+    border-radius: 8px;
+    overflow: hidden;
+    font-size: 0.95rem;
+  }
+  th, td { padding: 12px 16px; text-align: left; border-bottom: 1px solid var(--border); }
+  th { background: #21262d; color: var(--muted); font-weight: 600; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px; }
+  td.best { color: var(--green); font-weight: 700; }
+  td.worst { color: var(--muted); }
+  tr.highlight { background: #1f6feb11; }
+  tr:hover { background: #1f6feb0a; }
+  .arrow-up::after { content: ' \2191'; font-size: 0.75rem; }
+  .arrow-down::after { content: ' \2193'; font-size: 0.75rem; }
+
+  /* Video grid */
+  .videos { margin: 48px 0; }
+  .videos h2 { font-size: 1.5rem; margin-bottom: 20px; }
+  .video-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 20px;
+  }
+  .video-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+  .video-card:hover { border-color: var(--accent); }
+  .video-card.featured { border-color: var(--green); border-width: 2px; }
+  .video-card video {
+    width: 100%;
+    display: block;
+    background: #000;
+  }
+  .video-card .info {
+    padding: 14px 16px;
+  }
+  .video-card .info h3 {
+    font-size: 1rem;
+    margin-bottom: 4px;
+    font-family: 'SF Mono', monospace;
+    font-size: 0.9rem;
+  }
+  .video-card .info p { color: var(--muted); font-size: 0.85rem; }
+  .video-card .info .label {
+    display: inline-block;
+    font-size: 0.75rem;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-weight: 600;
+    margin-top: 6px;
+  }
+  .label-winner { background: #23863633; color: var(--green); }
+  .label-model { background: #1f6feb22; color: var(--accent); }
+  .label-fix { background: #d2992222; color: var(--yellow); }
+
+  /* Findings */
+  .findings { margin: 48px 0; }
+  .findings h2 { font-size: 1.5rem; margin-bottom: 20px; }
+  .finding-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 16px;
+  }
+  .finding-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 24px;
+  }
+  .finding-card h3 { font-size: 1.05rem; margin-bottom: 8px; }
+  .finding-card p { color: var(--muted); font-size: 0.92rem; }
+  .finding-card .icon { font-size: 1.5rem; margin-bottom: 10px; }
+
+  /* Footer */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 32px 0;
+    text-align: center;
+    color: var(--muted);
+    font-size: 0.85rem;
+    margin-top: 48px;
+  }
+  footer a { color: var(--accent); text-decoration: none; }
+  footer a:hover { text-decoration: underline; }
+
+  /* Download */
+  .dl-btn {
+    display: inline-block;
+    background: var(--accent);
+    color: #fff;
+    padding: 10px 24px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.95rem;
+    margin-top: 16px;
+    transition: opacity 0.2s;
+  }
+  .dl-btn:hover { opacity: 0.85; }
+
+  @media (max-width: 600px) {
+    .hero h1 { font-size: 1.6rem; }
+    .winner { padding: 24px 20px; }
+    table { font-size: 0.82rem; }
+    th, td { padding: 8px 10px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <section class="hero">
+    <h1>WIDER-<span>lipSync</span></h1>
+    <p>Comparative evaluation of open-source talking-head lip-sync models on a real-world video with occlusion challenges</p>
+    <span class="badge">LatentSync v1.6 &bull; MuseTalk v1.5 &bull; Occlusion Fix</span>
+  </section>
+
+  <section class="winner">
+    <h2>Best Result</h2>
+    <span class="tag">latentsync_smooth</span>
+    <p>LatentSync v1.6 with 40 denoising steps and DeepCache off. Highest identity preservation, most natural mouth, and the cookie plate stays visible — no post-processing needed.</p>
+  </section>
+
+  <section class="metrics">
+    <h2>Evaluation Results</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Video</th>
+          <th>Model</th>
+          <th class="arrow-up">Identity</th>
+          <th class="arrow-down">Mouth LPIPS</th>
+          <th class="arrow-up">Face SSIM</th>
+          <th class="arrow-down">Temporal MAD</th>
+          <th class="arrow-down">Flow</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="highlight">
+          <td><strong>latentsync_smooth</strong></td>
+          <td>LatentSync</td>
+          <td class="best">0.959</td>
+          <td class="best">0.106</td>
+          <td class="best">0.816</td>
+          <td>6.82</td>
+          <td>1.33</td>
+        </tr>
+        <tr>
+          <td>latentsync_fast</td>
+          <td>LatentSync</td>
+          <td class="best">0.960</td>
+          <td>0.107</td>
+          <td>0.813</td>
+          <td>6.69</td>
+          <td>1.32</td>
+        </tr>
+        <tr>
+          <td>latentsync_occfix</td>
+          <td>LatentSync</td>
+          <td>0.946</td>
+          <td>0.155</td>
+          <td class="worst">0.700</td>
+          <td>6.89</td>
+          <td>1.37</td>
+        </tr>
+        <tr>
+          <td>musetalk_raw</td>
+          <td>MuseTalk</td>
+          <td class="worst">0.789</td>
+          <td class="worst">0.206</td>
+          <td>0.814</td>
+          <td class="best">4.91</td>
+          <td class="best">0.88</td>
+        </tr>
+        <tr>
+          <td>musetalk_occfix</td>
+          <td>MuseTalk</td>
+          <td class="worst">0.786</td>
+          <td>0.198</td>
+          <td>0.806</td>
+          <td>5.13</td>
+          <td>0.95</td>
+        </tr>
+      </tbody>
+    </table>
+    <p style="color: var(--muted); font-size: 0.82rem; margin-top: 10px;">
+      Identity = ArcFace cosine similarity (higher = better). LPIPS = perceptual distance (lower = better). SSIM = structural similarity (higher = better). MAD/Flow = temporal jitter (lower = smoother).
+    </p>
+  </section>
+
+  <section class="videos">
+    <h2>Video Comparison</h2>
+    <p style="color: var(--muted); margin-bottom: 16px;">All videos available for download from the <a href="https://github.com/itaim18/WIDER-lipSync/releases/tag/v1.0" style="color: var(--accent);">v1.0 release</a>.</p>
+    <div class="video-grid">
+
+      <div class="video-card">
+        <video controls preload="metadata">
+          <source src="https://github.com/itaim18/WIDER-lipSync/releases/download/v1.0/original_reference.mp4" type="video/mp4">
+        </video>
+        <div class="info">
+          <h3>original_reference.mp4</h3>
+          <p>Ground truth input video</p>
+        </div>
+      </div>
+
+      <div class="video-card featured">
+        <video controls preload="metadata">
+          <source src="https://github.com/itaim18/WIDER-lipSync/releases/download/v1.0/latentsync_smooth.mp4" type="video/mp4">
+        </video>
+        <div class="info">
+          <h3>latentsync_smooth.mp4</h3>
+          <p>LatentSync v1.6 &mdash; 40 steps, no DeepCache</p>
+          <span class="label label-winner">BEST RESULT</span>
+        </div>
+      </div>
+
+      <div class="video-card">
+        <video controls preload="metadata">
+          <source src="https://github.com/itaim18/WIDER-lipSync/releases/download/v1.0/latentsync_fast.mp4" type="video/mp4">
+        </video>
+        <div class="info">
+          <h3>latentsync_fast.mp4</h3>
+          <p>LatentSync v1.6 &mdash; 20 steps + DeepCache</p>
+          <span class="label label-model">LatentSync</span>
+        </div>
+      </div>
+
+      <div class="video-card">
+        <video controls preload="metadata">
+          <source src="https://github.com/itaim18/WIDER-lipSync/releases/download/v1.0/latentsync_occfix.mp4" type="video/mp4">
+        </video>
+        <div class="info">
+          <h3>latentsync_occfix.mp4</h3>
+          <p>LatentSync + BiSeNet occlusion fix</p>
+          <span class="label label-fix">Occlusion Fix</span>
+        </div>
+      </div>
+
+      <div class="video-card">
+        <video controls preload="metadata">
+          <source src="https://github.com/itaim18/WIDER-lipSync/releases/download/v1.0/musetalk_raw.mp4" type="video/mp4">
+        </video>
+        <div class="info">
+          <h3>musetalk_raw.mp4</h3>
+          <p>MuseTalk v1.5 baseline</p>
+          <span class="label label-model">MuseTalk</span>
+        </div>
+      </div>
+
+      <div class="video-card">
+        <video controls preload="metadata">
+          <source src="https://github.com/itaim18/WIDER-lipSync/releases/download/v1.0/musetalk_occfix.mp4" type="video/mp4">
+        </video>
+        <div class="info">
+          <h3>musetalk_occfix.mp4</h3>
+          <p>MuseTalk + BiSeNet occlusion fix</p>
+          <span class="label label-fix">Occlusion Fix</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <section class="findings">
+    <h2>Key Findings</h2>
+    <div class="finding-cards">
+
+      <div class="finding-card">
+        <div class="icon">&#9989;</div>
+        <h3>latentsync_smooth wins</h3>
+        <p>Best identity preservation (0.96), best mouth quality (LPIPS 0.106), and the cookie plate stays visible without any fix. 40 denoising steps with no DeepCache is the sweet spot.</p>
+      </div>
+
+      <div class="finding-card">
+        <div class="icon">&#9888;&#65039;</div>
+        <h3>Occlusion fix backfires</h3>
+        <p>The per-frame BiSeNet compositing is mathematically correct, but the face-parsing mask jitters between frames, causing flickering worse than the original occlusion. Needs temporally-stable segmentation (SAM2) to work.</p>
+      </div>
+
+      <div class="finding-card">
+        <div class="icon">&#128260;</div>
+        <h3>MuseTalk: smooth but unfaithful</h3>
+        <p>30% less temporal jitter than LatentSync, but identity drops from 0.96 to 0.79 and mouth distortion nearly doubles. Not ideal when the person needs to look like themselves.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <div style="text-align: center; margin: 40px 0;">
+    <a href="https://github.com/itaim18/WIDER-lipSync/releases/tag/v1.0" class="dl-btn">Download Videos &amp; Paper (v1.0)</a>
+  </div>
+
+</div>
+
+<footer>
+  <div class="container">
+    <p><a href="https://github.com/itaim18/WIDER-lipSync">WIDER-lipSync</a> &mdash; Evaluation pipeline for talking-head lip-sync models</p>
+    <p style="margin-top: 6px;">Full paper: <a href="https://github.com/itaim18/WIDER-lipSync/blob/main/eval_workspace/paper/main.pdf">eval_workspace/paper/main.pdf</a></p>
+  </div>
+</footer>
+
+</body>
+</html>
