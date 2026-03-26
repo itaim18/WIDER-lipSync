@@ -20,12 +20,12 @@ Full evaluation paper: [`eval_workspace/paper/main.pdf`](eval_workspace/paper/ma
 
 | Video | Description |
 |-------|-------------|
-| [`latentsync_smooth.mp4`](eval_workspace/videos/outputs/latentsync_smooth.mp4) | Best overall -- LatentSync 40 steps |
-| [`latentsync_fast.mp4`](eval_workspace/videos/outputs/latentsync_fast.mp4) | LatentSync 20 steps + DeepCache |
-| [`latentsync_occfix.mp4`](eval_workspace/videos/outputs/latentsync_occfix.mp4) | LatentSync + occlusion fix |
-| [`musetalk_raw.mp4`](eval_workspace/videos/outputs/musetalk_raw.mp4) | MuseTalk v1.5 baseline |
-| [`musetalk_occfix.mp4`](eval_workspace/videos/outputs/musetalk_occfix.mp4) | MuseTalk + occlusion fix |
-| [`original_reference.mp4`](eval_workspace/videos/originals/original_reference.mp4) | Original input video |
+| [`latentsync_smooth.mp4`](https://github.com/itaim18/WIDER-lipSync/releases/tag/v1.0) | Best overall -- LatentSync 40 steps |
+| [`latentsync_fast.mp4`](https://github.com/itaim18/WIDER-lipSync/releases/tag/v1.0) | LatentSync 20 steps + DeepCache |
+| [`latentsync_occfix.mp4`](https://github.com/itaim18/WIDER-lipSync/releases/tag/v1.0) | LatentSync + occlusion fix |
+| [`musetalk_raw.mp4`](https://github.com/itaim18/WIDER-lipSync/releases/tag/v1.0) | MuseTalk v1.5 baseline |
+| [`musetalk_occfix.mp4`](https://github.com/itaim18/WIDER-lipSync/releases/tag/v1.0) | MuseTalk + occlusion fix |
+| [`original_reference.mp4`](https://github.com/itaim18/WIDER-lipSync/releases/tag/v1.0) | Original input video |
 
 ## Evaluation Metrics
 
